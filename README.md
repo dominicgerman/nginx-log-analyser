@@ -2,7 +2,7 @@
 
 ## Objective
 
-The goal of this project is to practice some basic shell scripting skills. I wrote a simple tool to analyze logs from the command line. This project is part of the DevOps project list on roadmap.sh. Here's the [project page]().
+The goal of this project is to practice some basic shell scripting skills. I wrote a simple tool to analyze logs from the command line. This project is part of the DevOps project list on roadmap.sh. Here's the [project page](https://roadmap.sh/projects/nginx-log-analyser).
 
 ## Requirements
 
