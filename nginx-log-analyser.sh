@@ -2,17 +2,24 @@
 
 awk '{print $1 " " $7 " " $9}' nginx-access.log > ip_path_status.log
 
-# awk -F'"' '{print $2}' nginx-access.log # user agent info
+COLUMNS=("1" "2" "3")
+LABELS=(
+	"Top 5 IP addresses with the most requests:"
+ 	"Top 5 most requested paths:"
+ 	"Top 5 response status codes:"
+)
 
-TOP_5_IP=$(awk '{print $1}' ip_path_status.log | sort | uniq --count | sort --numeric-sort --reverse | head -n 5)
-TOP_5_PATH=$(awk '{print $2}' ip_path_status.log | sort | uniq --count | sort -nr | head -n 5)
-TOP_5_CODES=$(awk '{print $3}' ip_path_status.log | sort | uniq --count | sort -nr | head -n 5)
+for i in "${!COLUMNS[@]}"; do  # COLUMNS[@} gives the array's values
+	TOP_5=$(awk -v col="${COLUMNS[$i]}" '{print $col}' ip_path_status.log | 
+		sort |
+		uniq --count |
+		sort -nr |
+		head -n 5)
 
-echo "Top 5 IP addresses with the most requests:"
-echo "$TOP_5_IP" | awk '{print $2 " - " $1 " requests"}'
-echo ""
-echo "Top 5 most requested paths:"
-echo "$TOP_5_PATH" | awk '{print $2 " - " $1 " requests"}'
-echo ""
-echo "Top 5 response status codes:"
-echo "$TOP_5_CODES" | awk '{print $2 " - " $1 " requests"}'
+	echo "${LABELS[$i]}"
+	echo "$TOP_5" | awk '{print $2 " - " $1 " requests"}'
+	echo ""
+done
+
+echo "Top 5 user agents: "
+awk -F '"' '{print $6}' nginx-access.log | sort | uniq --count | sort -nr | head -n 5 | awk '{print $2 " - " $1 " requests"}'
